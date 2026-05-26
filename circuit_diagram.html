@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartwatch Circuit Diagram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .diagram-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 800px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="diagram-container">
+        <h2 style="text-align: center; color: #333;">Smartwatch Fall Detection - Wiring Diagram</h2>
+        <div class="mermaid">
+            graph TD
+                %% Styling
+                classDef esp fill:#2b2b2b,stroke:#fff,stroke-width:2px,color:#fff;
+                classDef module fill:#1a6628,stroke:#fff,stroke-width:1px,color:#fff;
+                classDef power fill:#11488c,stroke:#fff,stroke-width:1px,color:#fff;
+                classDef button fill:#b52b2b,stroke:#fff,stroke-width:1px,color:#fff;
+                
+                ESP32["ESP32-C3 Mini (Main Controller)"]:::esp
+                
+                subgraph I2C_Bus["I2C Sensor Bus (Parallel Wiring)"]
+                    OLED["SSD1306 OLED (Display)"]:::module
+                    MAX["MAX30102 (Heart and SpO2)"]:::module
+                    MPU["MPU6050 (Motion)"]:::module
+                end
+                
+                subgraph Controls["User Inputs"]
+                    SOS["SOS Button"]:::button
+                    CANCEL["Cancel Button"]:::button
+                    MENU["Menu Button"]:::button
+                end
+                
+                subgraph PowerSystem["Power & Charging Setup"]
+                    BATT(("3.7V LiPo 500mAh")):::power
+                    TP["TP4056 Charger Board"]:::power
+                    SWITCH["ON/OFF Switch"]:::button
+                end
+
+                %% I2C Connections
+                ESP32 -->|GPIO 8 : SDA| OLED
+                ESP32 -->|GPIO 9 : SCL| OLED
+                ESP32 -->|GPIO 8 : SDA| MAX
+                ESP32 -->|GPIO 9 : SCL| MAX
+                ESP32 -->|GPIO 8 : SDA| MPU
+                ESP32 -->|GPIO 9 : SCL| MPU
+                
+                %% Button Connections (Internal Pull-up)
+                SOS -->|GPIO 6| ESP32
+                CANCEL -->|GPIO 5| ESP32
+                MENU -->|GPIO 7| ESP32
+                
+                %% Ground Bus
+                ESP32 -.-|GND| OLED
+                ESP32 -.-|GND| MAX
+                ESP32 -.-|GND| MPU
+                ESP32 -.-|GND| SOS
+                ESP32 -.-|GND| CANCEL
+                ESP32 -.-|GND| MENU
+
+                %% Power Delivery
+                BATT ==>|B+ and B-| TP
+                TP ==>|OUT+ Positive| SWITCH
+                SWITCH ==>|Switched 5V| ESP32
+                TP -.->|OUT- Ground| ESP32
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+</body>
+</html>

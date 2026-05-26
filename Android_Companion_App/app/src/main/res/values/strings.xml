@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FallGuard Smartwatch</string>
+    <string name="connect">Connect Device</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="vitals_header">Live Vitals</string>
+    <string name="emergency_header">Emergency Contact</string>
+    <string name="status_searching">Searching for Wearable...</string>
+    <string name="status_connected">Connected to ESP32</string>
+</resources>

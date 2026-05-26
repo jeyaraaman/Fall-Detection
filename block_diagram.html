@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartwatch Block Diagram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .diagram-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 900px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="diagram-container">
+        <h2 style="text-align: center; color: #333;">FallGuard System - High Level Block Diagram</h2>
+        <div class="mermaid">
+            flowchart LR
+                %% Styling
+                classDef wearable fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+                classDef smartphone fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+                classDef external fill:#ffebee,stroke:#c62828,stroke-width:2px;
+                classDef component fill:#ffffff,stroke:#333,stroke-width:1px;
+                
+                subgraph Wearable["Wearable Device (ESP32-C3)"]
+                    direction TB
+                    Power["Power Subsystem"]:::component
+                    MCU["Microcontroller unit (MCU)"]:::component
+                    Sensors["Sensor Array (Motion & Vitals)"]:::component
+                    UI["Display & Buttons"]:::component
+                    
+                    Power --> MCU
+                    Sensors -->|I2C Data| MCU
+                    MCU -->|I2C Updates| UI
+                end
+                
+                subgraph BLE["Wireless Link"]
+                    direction LR
+                    BLE_Signal(("BLE GATT Protocol"))
+                end
+
+                subgraph Smartphone["Android Companion App"]
+                    direction TB
+                    Service["Background Service"]:::component
+                    Dash["User Dashboard"]:::component
+                    Alarm["Emergency Override Logic"]:::component
+                    
+                    Service <--> Dash
+                    Service -->|SOS / Fall Trigger| Alarm
+                end
+                
+                subgraph ExternalWorld["External World"]
+                    Contact{"Emergency Contact"}:::external
+                end
+
+                MCU <-->|Transmit / Notify| BLE_Signal
+                BLE_Signal <-->|Receive / Subscribe| Service
+                
+                Alarm -->|Auto-Dials| Contact
+
+                %% Apply Subgraph Styling
+                class Wearable wearable;
+                class Smartphone smartphone;
+                class ExternalWorld external;
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+</body>
+</html>
