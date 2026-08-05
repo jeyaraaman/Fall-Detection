@@ -13,7 +13,7 @@ def train_model():
     window_size_sec = 2.0
     sampling_freq = 200
     timesteps = int(window_size_sec * sampling_freq)
-    channels = 9
+    channels = 6
     
     # 2. Load Data
     print("Loading SisFall dataset...")
