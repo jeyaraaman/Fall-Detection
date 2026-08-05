@@ -11,8 +11,6 @@ class SisFallLoader:
         self.adxl345_range = 16
         self.itg3200_res = 16
         self.itg3200_range = 2000
-        self.mma8451_res = 14
-        self.mma8451_range = 8
 
     def convert_accel(self, data, resolution, range_val):
         return (2 * range_val / (2**resolution)) * data
@@ -35,15 +33,13 @@ class SisFallLoader:
                     data.append([float(x) for x in line.split(',')])
             
             data = np.array(data)
-            if data.shape[1] != 9:
-                print(f"Warning: {file_path} has {data.shape[1]} columns instead of 9.")
+            if data.shape[1] != 6:
+                print(f"Warning: {file_path} has {data.shape[1]} columns instead of 6.")
                 return None
             
             # Convert to physical units
-            # Columns: 0-2: ADXL345, 3-5: ITG3200, 6-8: MMA8451
             data[:, 0:3] = self.convert_accel(data[:, 0:3], self.adxl345_res, self.adxl345_range)
             data[:, 3:6] = self.convert_gyro(data[:, 3:6], self.itg3200_res, self.itg3200_range)
-            data[:, 6:9] = self.convert_accel(data[:, 6:9], self.mma8451_res, self.mma8451_range)
             
             return data
         except Exception as e:
