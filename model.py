@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Conv1D, MaxPooling1D, GRU, Dense, Dropout, B
 def create_cnn_gru_model(input_shape):
     """
     Creates a hybrid CNN-GRU model for fall detection.
-    input_shape: (timesteps, channels), e.g., (400, 9)
+    input_shape: (timesteps, channels), e.g., (400, 6)
     """
     model = Sequential([
         # CNN Part - Extracts spatial features (local patterns in sensor data)
@@ -34,6 +34,6 @@ def create_cnn_gru_model(input_shape):
     return model
 
 if __name__ == "__main__":
-    # Example for SisFall: 2 seconds @ 200Hz = 400 timesteps, 9 channels
-    model = create_cnn_gru_model((400, 9))
+    # Example for SisFall: 2 seconds @ 200Hz = 400 timesteps, 6 channels
+    model = create_cnn_gru_model((400,6))
     model.summary()
